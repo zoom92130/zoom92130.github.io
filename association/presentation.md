@@ -1,8 +1,7 @@
 ---
 layout: page
-title: presentation
+title: Présentation du Club Photo Zoom92130
 ---
-# Présentation du Club Photo Zoom92130
 
 Le Photo-Club ZOOM 92130 a pour but de développer l’art photographique en créant de véritables échanges entre
 photographes amateurs, tant sur l’aspect culturel que sur les plans technique et pratique.

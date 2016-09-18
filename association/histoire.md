@@ -1,8 +1,7 @@
 ---
 layout: page
-title: histoire
+title: Histoire de Zoom92130
 ---
-# Histoire de Zoom92130
 
 ## De l’origine (1955) à aujourd’hui
 
