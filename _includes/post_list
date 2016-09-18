@@ -1,0 +1,22 @@
+{% if include.limit %}
+    {% assign limit = include.limit %}
+{% else %}
+    {% assign limit = false %}
+{% endif %}
+
+{% if include.class %}
+    {% assign class = include.class %}
+{% else %}
+    {% assign class = "" %}
+{% endif %}
+
+<ul class='{{ class }}'>
+    {% for post in site.posts limit:limit reversed %}
+        {% if include.tag %}
+            {% unless post.tags contains include.tag %}
+                {% continue %}
+            {% endunless %}
+        {% endif %}
+        <li><span>{{ post.date | date_to_string }}</span> <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+</ul>

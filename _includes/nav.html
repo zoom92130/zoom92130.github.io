@@ -1,0 +1,41 @@
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href="{{ site.url }}/#page-top">{{ site.title }}</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                {% assign post_count = site.posts | size %}
+                {% if post_count > 0 %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Derners articles<span class="caret"></span></a>
+                    {% include post_list limit=4 class="dropdown-menu" %}
+                </li>
+                <li>
+                    <a class="page-scroll" href="{{ site.url }}/posts.html">Tous nos articles</a>
+                </li>
+                {% endif %}
+                <li>
+                    <a class="page-scroll" href="{{ site.url }}/galeries.html">Galeries photo</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="{{ site.url }}/adherents.html">Espace adhérents</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="{{ site.url }}/#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
