@@ -1,14 +1,5 @@
 import React, {Component} from 'react';
 
-class JekyllPost extends Component {
-    render() {
-        return <span>
-            <span>{this.props.title}</span>
-            <input type="button" value="Supprimer"/>
-            </span>
-    }
-}
-
 class JekyllPostList extends Component {
     constructor(props) {
         super(props)
@@ -28,15 +19,13 @@ class JekyllPostList extends Component {
 
     render() {
         var posts = this.state.posts.map(function (post) {
-            return <li key={post}>
-                <JekyllPost title={post} path={post}/>
-            </li>
+            return <option key={post} value={post}>{post}</option>
         })
         return <form>
-            <ul>
+            <select>
                 {posts}
-                <input type="button" value="Nouveau"/>
-            </ul>
+            </select>
+            <input type="button" value="Nouveau"/>
         </form>
     }
 

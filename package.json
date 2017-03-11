@@ -30,6 +30,7 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
-    "normalize-path": "^2.0.1"
+    "normalize-path": "^2.0.1",
+    "react-modal": "^1.7.2",
   }
 }

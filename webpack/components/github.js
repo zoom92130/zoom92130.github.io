@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Modal from 'react-modal';
 import JekyllProperties from './github/JekyllPropertyEditor';
 import JekyllPostList from './github/JekyllPostList';
 var GitHubAPI = require('github-api');
@@ -105,6 +106,26 @@ class Repository {
     }
 }
 
+const customStyles = {
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.85)'
+    },
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        width: '90%',
+        height: '90%',
+    }
+};
 
 class GitHubEditor extends Component {
     constructor(props) {
@@ -115,15 +136,69 @@ class GitHubEditor extends Component {
         this.repo = new Repository(this.GitHubAPI, 'zoom92130', 'zoom92130.github.io', 'master', function (message) {
             return "Thibault Jamet {0} via web interface".format(message)
         })
+
+        this.state = {
+            modalIsOpen: false,
+            mode: 'content',
+        };
+
+        this.openModal = this.openModal.bind(this);
+        this.afterOpenModal = this.afterOpenModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+    }
+
+    componentWillMount() {
+        Modal.setAppElement('body');
+    }
+
+    openModal() {
+        this.setState({modalIsOpen: true});
+    }
+
+    afterOpenModal() {
+    }
+
+    closeModal() {
+        this.setState({modalIsOpen: false});
+    }
+
+    switchMode(value) {
+        this.setState({
+            mode: value
+        });
     }
 
     render() {
+        if (this.state.mode == 'content') {
+            var content = <JekyllPostList repo={this.repo}/>
+        } else {
+            var content = <JekyllProperties repo={this.repo}/>
+        }
+        // <button onClick={this.openModal}>Open Modal</button>
         return (
-            <section>
-                <JekyllProperties repo={this.repo}/>
-                <JekyllPostList repo={this.repo}/>
-            </section>
+            <div>
+                <Modal
+                    isOpen={this.state.modalIsOpen}
+                    onAfterOpen={this.afterOpenModal}
+                    onRequestClose={this.closeModal}
+                    style={customStyles}
+                    contentLabel="Content editor"
+                >
+                    <i className="fa fa-times close" aria-hidden="true" onClick={this.closeModal}/>
+                    <div>
+                        <input type="button" onClick={function () {
+                            this.switchMode('content')
+                        }.bind(this)} value="Editer le contenu"/>
+                        <input type="button" onClick={function () {
+                            this.switchMode('properties')
+                        }.bind(this)} value="Configurer"/>
+                    </div>
+                    {content}
+                </Modal>
+            </div>
+
         )
     }
 }
+
 export default GitHubEditor;
