@@ -3,3 +3,4 @@ legend: Photo-Club à Issy les Moulineaux
 url: //zoom92130.github.io
 local_theme: nubumous
 contact: contact@zoom92130.com
+exclude: ['webpack', 'node_modules']
