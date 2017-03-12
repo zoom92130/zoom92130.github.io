@@ -1,7 +1,10 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import Modal from 'react-modal';
-import JekyllProperties from './github/JekyllPropertyEditor';
-import JekyllPostList from './github/JekyllPostList';
+
+import JekyllPropertyEditor from './jekyll/PropertyEditor';
+import JekyllPostList from './jekyll/PostList';
+import JekyllPostEditor from './jekyll/PostEditor';
+import Progress from './progress';
 var GitHubAPI = require('github-api');
 var normalize = require('normalize-path');
 
@@ -25,35 +28,54 @@ class Error {
 }
 
 class Repository {
-    constructor(api, user, repo, branch, createMsgCb) {
-        this.api = api;
-        this.branch = branch;
-        this.user = user;
-        this.repo = repo;
-        this.createMsgCb = createMsgCb;
+    constructor(api, user, repo, branch, createMsgCb, postUpdateCb) {
+        this.api = api
+        this.branch = branch
+        this.user = user
+        this.repo = repo
+        this.createMsgCb = createMsgCb
+        this.postUpdateCb = postUpdateCb
         return this
     }
 
-    getContents(path, cb = null) {
-        this.api.getRepo(this.user, this.repo).getContents(this.branch, path, true, function (error, data, _) {
-            if (cb != null)
+    _callback(cb, refresh=false){
+        return function(error, data, request){
+            if(error){
+                error = new Error(error.message)
+            }
+            if(cb){
                 cb(error, data)
-        })
+            }
+            if(refresh && this.postUpdateCb && !error){
+                //setTimeout(this.postUpdateCb, 5000)
+            }
+        }.bind(this)
+    }
+
+    delete(path, cb=null){
+        return this.api.getRepo(this.user, this.repo).deleteFile(this.branch, path, this._callback(cb, true))
+    }
+
+    getContents(path, cb = null) {
+        return this.api.getRepo(this.user, this.repo).getContents(this.branch, path, true, this._callback(cb))
     }
 
     setContents(path, data, cb = null) {
-        this.getContents(path, function (error, oldData) {
+        function write(error, oldData){
+            // if we have an error, the current file is new
+            // if we have no error, it is an update
+            var message
+            var refresh
             if (error != null) {
-                if (cb != null) {
-                    cb(error)
-                }
+                refresh = true
+                message = "created {0}".format(path)
             } else if (oldData != data) {
-                this.api.getRepo(this.user, this.repo).writeFile(this.branch, path, data, this.createMsgCb("updated {0}".format(path)), function (error, data, _) {
-                    if (cb != null)
-                        cb(error)
-                })
+                refresh = false
+                message = "updated {0}".format(path)
             }
-        }.bind(this))
+            this.api.getRepo(this.user, this.repo).writeFile(this.branch, path, data, this.createMsgCb(message), this._callback(cb, refresh))
+        }
+        this.getContents(path, this._callback(write.bind(this)))
     }
 
     _listFilesInPath(repo, commit, path, cb = null) {
@@ -135,11 +157,13 @@ class GitHubEditor extends Component {
         })
         this.repo = new Repository(this.GitHubAPI, 'zoom92130', 'zoom92130.github.io', 'master', function (message) {
             return "Thibault Jamet {0} via web interface".format(message)
-        })
+        }, this.updatePostList.bind(this))
 
         this.state = {
-            modalIsOpen: false,
+            modalIsOpen: true,
             mode: 'content',
+            progress: {},
+            posts: [],
         };
 
         this.openModal = this.openModal.bind(this);
@@ -149,6 +173,26 @@ class GitHubEditor extends Component {
 
     componentWillMount() {
         Modal.setAppElement('body');
+    }
+
+    updatePostList(){
+        this.setProgressStatus('progress', 'Chargement de la liste des posts...')
+        this.repo.listFilesInPath("_posts", this.storePosts.bind(this))
+    }
+
+    componentDidMount(){
+        this.updatePostList()
+    }
+
+    storePosts(error, posts) {
+        if (error == null) {
+            this.setProgressStatus('success', 'Liste des posts chargée.')
+            this.setState({
+                posts: posts,
+            })
+        } else {
+            this.setProgressStatus('error', error.message)
+        }
     }
 
     openModal() {
@@ -168,11 +212,41 @@ class GitHubEditor extends Component {
         });
     }
 
+    postSelected(path) {
+        this.setState({
+            postEdited: path,
+        })
+    }
+
+    setProgressStatus(status, message=null){
+        this.setState({
+            progress: {
+                status: status,
+                message: message,
+            },
+        })
+    }
+
+    onPostListChange(){
+        this.setState({
+            refreshTime: new Date(),
+        })
+    }
+
     render() {
         if (this.state.mode == 'content') {
-            var content = <JekyllPostList repo={this.repo}/>
+            var content = <section>
+                <JekyllPostList posts={this.state.posts} onChange={this.postSelected.bind(this)}/>
+                <a className="btn btn-default" onClick={event => this.postSelected(null)}>
+                    <i className="fa fa-plus fa-2x" aria-hidden="true"/>
+                </a>
+                <JekyllPostEditor  setProgressStatus={this.setProgressStatus.bind(this)} path={this.state.postEdited} loader={this.repo}/>
+            </section>
+
         } else {
-            var content = <JekyllProperties repo={this.repo}/>
+            var content = <section>
+                <JekyllPropertyEditor setProgressStatus={this.setProgressStatus.bind(this)} loader={this.repo}/>
+            </section>
         }
         // <button onClick={this.openModal}>Open Modal</button>
         return (
@@ -194,6 +268,7 @@ class GitHubEditor extends Component {
                         }.bind(this)} value="Configurer"/>
                     </div>
                     {content}
+                    <Progress status={this.state.progress}/>
                 </Modal>
             </div>
 

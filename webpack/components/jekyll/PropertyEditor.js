@@ -25,7 +25,7 @@ class JekylParameter extends Component {
     }
 }
 
-class JekyllProperties extends Component {
+class JekyllPropertyEditor extends Component {
     constructor(props) {
         //console.log(props)
         super(props)
@@ -33,7 +33,7 @@ class JekyllProperties extends Component {
             configs: {},
             bla: 'bli'
         }
-        this.props.repo.getContents('_config.yml', this._storeConfig.bind(this))
+        this.props.loader.getContents('_config.yml', this._storeConfig.bind(this))
     }
 
     _storeConfig(error, data) {
@@ -43,7 +43,7 @@ class JekyllProperties extends Component {
     }
 
     handleSubmit() {
-        this.props.repo.setContents('_config.yml99', yaml.safeDump(this.state.configs))
+        this.props.repo.setContents('_config.yml', yaml.safeDump(this.state.configs))
         return false
     }
 
@@ -70,4 +70,4 @@ class JekyllProperties extends Component {
         )
     }
 }
-export default JekyllProperties
+export default JekyllPropertyEditor

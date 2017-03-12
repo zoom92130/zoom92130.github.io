@@ -4,7 +4,7 @@ import GitHubEditor from './components/github';
 
 
 function bootstrap(){
-    //render(<GitHubEditor />, document.getElementById('github-editor'));
+    render(<GitHubEditor />, document.getElementById('admin'));
 }
 
 if(window.attachEvent) {

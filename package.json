@@ -19,18 +19,25 @@
   "devDependencies": {
     "babel-core": "^6.23.1",
     "babel-loader": "^6.4.0",
-    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-es2017": "^6.22.0",
     "babel-preset-react": "^6.23.0",
     "client-oauth2": "^3.4.1",
     "github-api": "^3.0.0",
     "js-yaml": "^3.8.2",
+    "less": "^2.7.2",
+    "less-loader": "^3.0.0",
     "react": "^15.4.2",
     "react-addons-update": "^15.4.2",
     "react-dom": "^15.4.2",
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "diacritics": "^1.3.0",
+    "moment": "^2.17.1",
     "normalize-path": "^2.0.1",
     "react-modal": "^1.7.2",
+    "react-rte": "^0.11.0",
+    "react-tag-list-editor": "^1.0.1",
+    "simple-react-forms": "^1.2.0"
   }
 }
