@@ -10,6 +10,9 @@ class GoogleConnect {
             this.gapi.auth2.getAuthInstance().isSignedIn.listen(this.listenSignedIn.bind(this))
             this.ready = true
             this.callAllCbs(this.readyCbs)
+            if (this.gapi.auth2.getAuthInstance().isSignedIn.get()){
+                this.callAllCbs(this.loginCbs)
+            }
         }
         this.readyCbs = []
         this.loginCbs = []
@@ -49,7 +52,6 @@ class GoogleConnect {
     }
 
     login() {
-        console.log(window.gapi.auth2.getAuthInstance().isSignedIn.get())
         if (window.gapi.auth2.getAuthInstance().isSignedIn.get()){
             this.user = this.gapi.auth2.getAuthInstance().currentUser.get()
             return

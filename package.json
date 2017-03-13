@@ -36,6 +36,7 @@
     "googleapis": "^18.0.0",
     "moment": "^2.17.1",
     "normalize-path": "^2.0.1",
+    "react-cookie": "^1.0.4",
     "react-modal": "^1.7.2",
     "react-rte": "^0.11.0",
     "react-tag-list-editor": "^1.0.1",

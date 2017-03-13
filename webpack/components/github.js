@@ -5,6 +5,8 @@ import JekyllPropertyEditor from './jekyll/PropertyEditor';
 import JekyllPostList from './jekyll/PostList';
 import JekyllPostEditor from './jekyll/PostEditor';
 import Connect, {GoogleConnectComponent} from './connect'
+import {Form, Field} from 'simple-react-forms'
+import cookie from 'react-cookie';
 import Progress from './progress';
 var GitHubAPI = require('github-api');
 var normalize = require('normalize-path');
@@ -154,19 +156,20 @@ const customStyles = {
 class GitHubEditor extends Component {
     constructor(props) {
         super(props)
-        this.GitHubAPI = new GitHubAPI({
-            token: this.props.token
-        })
-        this.repo = new Repository(this.GitHubAPI, 'zoom92130', 'zoom92130.github.io', 'master', function (message) {
-            return "Thibault Jamet {0} via web interface".format(message)
-        }, this.updatePostList.bind(this))
 
         this.state = {
             modalIsOpen: false,
             mode: 'content',
             progress: {},
             posts: [],
+            token: cookie.load('githubToken'),
         };
+        this.GitHubAPI = new GitHubAPI({
+            token: this.state.token,
+        })
+        this.repo = new Repository(this.GitHubAPI, 'zoom92130', 'zoom92130.github.io', 'master', function (message) {
+            return "Thibault Jamet {0} via web interface".format(message)
+        }, this.updatePostList.bind(this))
 
         this.openModal = this.openModal.bind(this);
         this.afterOpenModal = this.afterOpenModal.bind(this);
@@ -174,7 +177,7 @@ class GitHubEditor extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (newProps.opened){
+        if (newProps.opened) {
             this.setState({
                 modalIsOpen: newProps.opened,
             })
@@ -243,6 +246,20 @@ class GitHubEditor extends Component {
         })
     }
 
+    onCookieChange(value) {
+
+        this.GitHubAPI = new GitHubAPI({
+            token: value
+        })
+        cookie.save('githubToken', value)
+        this.repo = new Repository(this.GitHubAPI, 'zoom92130', 'zoom92130.github.io', 'master', function (message) {
+            return "Thibault Jamet {0} via web interface".format(message)
+        }, this.updatePostList.bind(this))
+        this.setState({
+            token: value,
+        })
+    }
+
     render() {
         if (this.state.mode == 'content') {
             var content = <section>
@@ -259,6 +276,7 @@ class GitHubEditor extends Component {
                 <JekyllPropertyEditor setProgressStatus={this.setProgressStatus.bind(this)} loader={this.repo}/>
             </section>
         }
+
         // <button onClick={this.openModal}>Open Modal</button>
         return (
             <div>
@@ -278,6 +296,12 @@ class GitHubEditor extends Component {
                             this.switchMode('properties')
                         }.bind(this)} value="Configurer"/>
                     </div>
+                    <Field
+                        name="token"
+                        label="token"
+                        value={this.state.token}
+                        onChange={event => this.onCookieChange(event.target.value)}
+                    />
                     {content}
                     <Progress status={this.state.progress}/>
                 </Modal>
@@ -287,27 +311,30 @@ class GitHubEditor extends Component {
 }
 
 class GitHubMenu extends GoogleConnectComponent {
-    openMenu(){
+    openMenu() {
         this.setState({
-            opened: true
+            opened: true,
+
         })
     }
+
     render() {
         if (!this.state.ready) {
             return null
         }
         var opened = this.state.opened
-        if (opened==null){
+        if (opened == null) {
             opened = false
         }
         this.state.opened = false
         if (this.state.loggedin) {
             return <a className="page-scroll" onClick={this.openMenu.bind(this)}>
-                <GitHubEditor opened={opened} token={null}/>
+
+                <GitHubEditor opened={true}/>
                 Administrer
             </a>
         }
-        return false
+        return null
     }
 }
 export default GitHubMenu
