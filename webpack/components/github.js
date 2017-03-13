@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import JekyllPropertyEditor from './jekyll/PropertyEditor';
 import JekyllPostList from './jekyll/PostList';
 import JekyllPostEditor from './jekyll/PostEditor';
+import Connect, {GoogleConnectComponent} from './connect'
 import Progress from './progress';
 var GitHubAPI = require('github-api');
 var normalize = require('normalize-path');
@@ -38,21 +39,21 @@ class Repository {
         return this
     }
 
-    _callback(cb, refresh=false){
-        return function(error, data, request){
-            if(error){
+    _callback(cb, refresh = false) {
+        return function (error, data, request) {
+            if (error) {
                 error = new Error(error.message)
             }
-            if(cb){
+            if (cb) {
                 cb(error, data)
             }
-            if(refresh && this.postUpdateCb && !error){
+            if (refresh && this.postUpdateCb && !error) {
                 //setTimeout(this.postUpdateCb, 5000)
             }
         }.bind(this)
     }
 
-    delete(path, cb=null){
+    delete(path, cb = null) {
         return this.api.getRepo(this.user, this.repo).deleteFile(this.branch, path, this._callback(cb, true))
     }
 
@@ -61,7 +62,7 @@ class Repository {
     }
 
     setContents(path, data, cb = null) {
-        function write(error, oldData){
+        function write(error, oldData) {
             // if we have an error, the current file is new
             // if we have no error, it is an update
             var message
@@ -75,6 +76,7 @@ class Repository {
             }
             this.api.getRepo(this.user, this.repo).writeFile(this.branch, path, data, this.createMsgCb(message), this._callback(cb, refresh))
         }
+
         this.getContents(path, this._callback(write.bind(this)))
     }
 
@@ -153,14 +155,14 @@ class GitHubEditor extends Component {
     constructor(props) {
         super(props)
         this.GitHubAPI = new GitHubAPI({
-            token: null
+            token: this.props.token
         })
         this.repo = new Repository(this.GitHubAPI, 'zoom92130', 'zoom92130.github.io', 'master', function (message) {
             return "Thibault Jamet {0} via web interface".format(message)
         }, this.updatePostList.bind(this))
 
         this.state = {
-            modalIsOpen: true,
+            modalIsOpen: false,
             mode: 'content',
             progress: {},
             posts: [],
@@ -171,16 +173,24 @@ class GitHubEditor extends Component {
         this.closeModal = this.closeModal.bind(this);
     }
 
+    componentWillReceiveProps(newProps) {
+        if (newProps.opened){
+            this.setState({
+                modalIsOpen: newProps.opened,
+            })
+        }
+    }
+
     componentWillMount() {
         Modal.setAppElement('body');
     }
 
-    updatePostList(){
+    updatePostList() {
         this.setProgressStatus('progress', 'Chargement de la liste des posts...')
         this.repo.listFilesInPath("_posts", this.storePosts.bind(this))
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.updatePostList()
     }
 
@@ -218,7 +228,7 @@ class GitHubEditor extends Component {
         })
     }
 
-    setProgressStatus(status, message=null){
+    setProgressStatus(status, message = null) {
         this.setState({
             progress: {
                 status: status,
@@ -227,7 +237,7 @@ class GitHubEditor extends Component {
         })
     }
 
-    onPostListChange(){
+    onPostListChange() {
         this.setState({
             refreshTime: new Date(),
         })
@@ -240,7 +250,8 @@ class GitHubEditor extends Component {
                 <a className="btn btn-default" onClick={event => this.postSelected(null)}>
                     <i className="fa fa-plus fa-2x" aria-hidden="true"/>
                 </a>
-                <JekyllPostEditor  setProgressStatus={this.setProgressStatus.bind(this)} path={this.state.postEdited} loader={this.repo}/>
+                <JekyllPostEditor setProgressStatus={this.setProgressStatus.bind(this)} path={this.state.postEdited}
+                                  loader={this.repo}/>
             </section>
 
         } else {
@@ -271,9 +282,32 @@ class GitHubEditor extends Component {
                     <Progress status={this.state.progress}/>
                 </Modal>
             </div>
-
         )
     }
 }
 
-export default GitHubEditor;
+class GitHubMenu extends GoogleConnectComponent {
+    openMenu(){
+        this.setState({
+            opened: true
+        })
+    }
+    render() {
+        if (!this.state.ready) {
+            return null
+        }
+        var opened = this.state.opened
+        if (opened==null){
+            opened = false
+        }
+        this.state.opened = false
+        if (this.state.loggedin) {
+            return <a className="page-scroll" onClick={this.openMenu.bind(this)}>
+                <GitHubEditor opened={opened} token={null}/>
+                Administrer
+            </a>
+        }
+        return false
+    }
+}
+export default GitHubMenu

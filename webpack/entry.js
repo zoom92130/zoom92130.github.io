@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
-import {render} from 'react-dom';
-import GitHubEditor from './components/github';
+import React, { Component } from 'react'
+import {render} from 'react-dom'
+import Connect, {GoogleConnect} from './components/connect'
+import GitHubMenu from './components/github'
 
 
 function bootstrap(){
-    render(<GitHubEditor />, document.getElementById('admin'));
+    var GoogleApi = new GoogleConnect()
+    render(<Connect google={GoogleApi}/>, document.getElementById('connect-menu'))
+    render(<GitHubMenu google={GoogleApi}/>, document.getElementById('admin-edit'));
 }
 
 if(window.attachEvent) {
