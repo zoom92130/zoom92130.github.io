@@ -76442,6 +76442,7 @@ class GoogleConnect {
             this.ready = true;
             this.callAllCbs(this.readyCbs);
             if (this.gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                this.user = this.gapi.auth2.getAuthInstance().currentUser.get();
                 this.callAllCbs(this.loginCbs);
             }
         }
