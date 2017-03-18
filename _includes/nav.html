@@ -1,3 +1,4 @@
+{% include _base %}
 <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -20,7 +21,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Zoom 92130<span class="caret"></span></a>
                     <ul class='dropdown-menu'>
                         {% for page in site.pages limit:limit reversed %}
-                            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                        <li><a href="{{ base }}{{ page.url }}">{{ page.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -36,13 +37,13 @@
                     <a class="page-scroll" href="{{ site.url }}/#articles">Dernier articles</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="{{ site.url }}/galeries.html">Galeries photo</a>
+                    <a class="page-scroll" href="{{ base }}galeries.html">Galeries photo</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="{{ site.url }}/adherents.html">Espace adhérents</a>
+                    <a class="page-scroll" href="{{ base }}adherents.html">Espace adhérents</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="{{ site.url }}/#contact">Contact</a>
+                    <a class="page-scroll" href="{{ base }}#contact">Contact</a>
                 </li>
                 <li id="admin-edit">
                 </li>
