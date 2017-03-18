@@ -1,49 +1,69 @@
 {% include _base %}
 <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
+
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="{{ site.url }}/#page-top">{{ site.title }}</a>
+            <a class="navbar-brand page-scroll" href="#page-top">{{ site.title }}</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul id="topnav" class="nav navbar-nav navbar-right">
+
+                <li class="dropdown dropdown-accordion" data-accordion="#accordion">
+                    <a data-toggle="dropdown" href="#">Articles <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" id="accordion">
+                        {% for category in site.categories %}
+                        <li class="panel-group">
+                            <a data-toggle="collapse" data-parent="#accordion"
+                               href="#collapse{{forloop.index}}">
+                                {{ category | first }}
+                            </a>
+                            <div id="collapse{{forloop.index}}" class="panel panel-default panel-collapse collapse">
+                                <div class="panel-body">
+                                    {% for posts in category %}
+                                    {% for post in posts %}
+                                    {% unless post.url == nil %}
+                                    <a href="{{ base }}{{ post.url }}">{{ post.title }}</a><br/>
+                                    {% endunless %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
                 {% assign pagescount = site.pages | size %}
                 {% if pagescount > 0 %}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Zoom 92130<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Zoom 92130<span class="fa fa-chevron-down" aria-hidden="true"></span></a>
                     <ul class='dropdown-menu'>
                         {% for page in site.pages limit:limit reversed %}
-                        <li><a href="{{ base }}{{ page.url }}">{{ page.title }}</a></li>
+                        <li><a href="{{ base }}/{{ page.url }}">{{ page.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
                 {% endif %}
-                {% assign post_count = site.posts | size %}
-                {% if 0 > 0 %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Derners articles<span class="caret"></span></a>
-                    {% include post_list limit=4 class="dropdown-menu" %}
-                </li>
-                {% endif %}
                 <li>
-                    <a class="page-scroll" href="{{ site.url }}/#articles">Dernier articles</a>
+                    <a class="page-scroll" href="{{ base }}/galeries.html">Galeries photo</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="{{ base }}galeries.html">Galeries photo</a>
+                    <a class="page-scroll" href="{{ base }}/adherents.html">Espace adhérents</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="{{ base }}adherents.html">Espace adhérents</a>
-                </li>
-                <li>
-                    <a class="page-scroll" href="{{ base }}#contact">Contact</a>
+                    <a class="page-scroll" href="{{ base }}/#contact">Contact</a>
                 </li>
                 <li id="admin-edit">
                 </li>
