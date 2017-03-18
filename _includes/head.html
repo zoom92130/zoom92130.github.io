@@ -9,8 +9,12 @@
 
     <title>Creative - Start Bootstrap Theme</title>
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="{{ base }}/assets/creative/css/bootstrap.min.css" type="text/css">
+    <!--<link rel="stylesheet" href="{{ base }}/assets/creative/css/bootstrap.min.css" type="text/css">-->
 
+    <!-- Latest compiled and minified JavaScript -->
+    <link rel="stylesheet" href="{{ base }}/assets/css/bootstrap-submenu-acordilion.css" type="text/css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Custom Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
@@ -22,39 +26,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ base }}/assets/creative/css/creative.css" type="text/css">
 
-    <script type="text/javascript" src="{{ base }}/assets/js/bundle.js" charset="utf-8"></script>
     <link rel="stylesheet" href="{{ base }}/assets/css/react-tag-list.css" type="text/css">
-    <!--<script src="https://apis.google.com/js/platform.js?onload=googleinit" async defer></script>-->
-    <script src="https://apis.google.com/js/api.js">
-        
-    </script>
-    <!--<meta name="google-signin-scope" content="profile email">-->
-    <!--<meta name="google-signin-client_id" content="864956616548-r2fl09btdthmd2bq5oloco4d7ljm4hlh.apps.googleusercontent.com">-->
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <script>
-            function googleinit(){
-                console.log("google loaded")
-            }
-            function onSignIn(googleUser) {
-                // Useful data for your client-side scripts:
-                var profile = googleUser.getBasicProfile();
-                console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-                console.log('Full Name: ' + profile.getName());
-                console.log('Given Name: ' + profile.getGivenName());
-                console.log('Family Name: ' + profile.getFamilyName());
-                console.log("Image URL: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail());
-
-                // The ID token you need to pass to your backend:
-                var id_token = googleUser.getAuthResponse().id_token;
-                console.log("ID Token: " + id_token);
-            };
-        </script>
-    <![endif]-->
 
 </head>
