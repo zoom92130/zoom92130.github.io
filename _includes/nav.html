@@ -51,6 +51,9 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">Zoom 92130<span class="fa fa-chevron-down" aria-hidden="true"></span></a>
                     <ul class='dropdown-menu'>
+                        <li>
+                            <a class="page-scroll" href="{{ base }}/#contact">Contact</a>
+                        </li>
                         {% for page in site.pages limit:limit reversed %}
                         <li><a href="{{ base }}/{{ page.url }}">{{ page.title }}</a></li>
                         {% endfor %}
@@ -62,9 +65,6 @@
                 </li>
                 <li>
                     <a class="page-scroll" href="{{ base }}/adherents.html">Espace adhérents</a>
-                </li>
-                <li>
-                    <a class="page-scroll" href="{{ base }}/#contact">Contact</a>
                 </li>
                 <li id="admin-edit">
                 </li>
