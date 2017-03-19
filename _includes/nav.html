@@ -19,13 +19,13 @@
             <ul id="topnav" class="nav navbar-nav navbar-right">
 
                 <li class="dropdown dropdown-accordion" data-accordion="#accordion">
-                    <a data-toggle="dropdown" href="#">Articles
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Articles
                         <span class="fa fa-chevron-down" aria-hidden="true"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu" id="accordion">
                         {% for category in site.categories %}
                         <li class="panel-group">
-                            <a data-toggle="collapse" data-parent="#accordion"
+                            <a class="dropdown-toggle" data-toggle="collapse" data-parent="#accordion"
                                href="#collapse{{forloop.index}}">
                                 {{ category | first }}
                             </a>
